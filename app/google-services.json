@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "892724486104",
+    "firebase_url": "https://shuber-3fd62.firebaseio.com",
+    "project_id": "shuber-3fd62",
+    "storage_bucket": "shuber-3fd62.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:892724486104:android:e376bdac1f1a3a1c",
+        "android_client_info": {
+          "package_name": "com.msmworks.shuber"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "892724486104-t32prm9o9e6lnilaj464rtlto8qj27a2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.msmworks.shuber",
+            "certificate_hash": "39115ab1b245349ea097cfb4c57b56bf61cb82a5"
+          }
+        },
+        {
+          "client_id": "892724486104-9d6fo77e94m4e0m6vevqkthn9a05k24l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5bW2bO67ke4FQ4bXXj_7yT_DrgWb0BUE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "892724486104-9d6fo77e94m4e0m6vevqkthn9a05k24l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

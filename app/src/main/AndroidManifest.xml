@@ -51,7 +51,8 @@
         <activity android:name=".CustomerLoginActivity" />
         <activity
             android:name=".CustomerMapActivity"
-            android:label="@string/title_activity_customer_map"></activity>
+            android:label="@string/title_activity_customer_map" />
+        <activity android:name=".CustomerSettingsActivity"></activity>
     </application>
 
 </manifest>

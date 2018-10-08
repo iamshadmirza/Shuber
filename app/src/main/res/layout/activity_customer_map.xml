@@ -26,6 +26,15 @@
         map:layout_constraintVertical_bias="1.0"
         tools:context=".CustomerMapActivity" />
 
+
+    <Button
+        android:id="@+id/settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="settings"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logout_button" />
     <Button
         android:id="@+id/call_shuber"
         android:layout_width="0dp"
@@ -36,15 +45,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/settings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="settings"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logout_button" />
 
     <android.support.v7.widget.CardView
         android:layout_width="0dp"
@@ -61,45 +61,62 @@
             android:layout_height="wrap_content" />
     </android.support.v7.widget.CardView>
 
-
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/driversInfo"
-        android:layout_gravity="bottom"
-        android:orientation="horizontal"
-        android:background="@android:color/white"
-        android:visibility="gone" >
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:id="@+id/driverProfileInfo"
-            android:padding="20sp" />
+        android:orientation="vertical"
+        android:gravity="bottom">
+
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="40sp">
-            <TextView
+            android:id="@+id/driverInfo"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal"
+            android:background="@android:color/white"
+             >
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/driverProfileImage"
+                android:padding="20sp" />
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/driverDestination"
-                android:paddingBottom="10sp"
-                android:text="Destination: --" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/driverName"
-                android:paddingBottom="10sp"
-                android:paddingTop="20sp" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/driverPhone"
-                android:paddingBottom="10sp"
-                android:paddingTop="20sp" />
+                android:orientation="vertical"
+                android:paddingLeft="40sp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/driverDestination"
+                    android:paddingBottom="10sp"
+                    android:text="Destination: --" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/driverName"
+                    android:paddingBottom="10sp"
+                    android:paddingTop="20sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/driverPhone"
+                    android:paddingBottom="10sp"
+                    android:paddingTop="20sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/driverCar"
+                    android:paddingBottom="10sp"
+                    android:paddingTop="20sp" />
+            </LinearLayout>
         </LinearLayout>
 
+
+
     </LinearLayout>
+
+
+
 
 </android.support.constraint.ConstraintLayout>

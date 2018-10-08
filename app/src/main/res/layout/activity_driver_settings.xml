@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CustomerSettingsActivity">
+    tools:context=".DriverSettingsActivity">
 
     <EditText
         android:id="@+id/name_field"
@@ -16,7 +16,6 @@
         android:ems="10"
         android:hint="Name"
         android:inputType="textPersonName"
-        android:text="Name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/user_image" />
@@ -33,6 +32,18 @@
         app:layout_constraintStart_toStartOf="@+id/name_field"
         app:layout_constraintTop_toBottomOf="@+id/name_field" />
 
+    <EditText
+        android:id="@+id/car_field"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="Car"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="@+id/number_field"
+        app:layout_constraintStart_toStartOf="@+id/name_field"
+        app:layout_constraintTop_toBottomOf="@+id/number_field" />
+
     <Button
         android:id="@+id/confirm_button"
         android:layout_width="0dp"
@@ -46,11 +57,11 @@
         android:id="@+id/back_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="72dp"
-        android:layout_marginTop="80dp"
         android:text="Back"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/number_field" />
+        app:layout_constraintTop_toBottomOf="@+id/car_field" />
 
     <ImageView
         android:id="@+id/user_image"

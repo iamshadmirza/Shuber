@@ -13,8 +13,12 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.location.LocationListener;
@@ -38,6 +42,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
+import java.util.Map;
 
 public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
@@ -53,12 +58,17 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private String mUserID;
     private DatabaseReference mDatabaseReference;
     private GeoFire mGeoFire;
-    private Button mLogout;
+    private Button mLogout, mSettings;
     private String mCustomerID= "";
     private Marker mPickupMarker;
     private DatabaseReference mAssignedCustomerPickupRef;
     private ValueEventListener mAssignedCustomerPickupRefListener;
     private boolean isLoggingout = false;
+    private LinearLayout mCustomerInfo;
+    private ImageView mCustomerProfileImage;
+    private TextView mCustomerName, mCustomerPhone, mCustomerDestination;
+
+
 
 
     @Override
@@ -66,6 +76,14 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_map);
         mLogout = (Button) findViewById(R.id.logout_button);
+        mSettings = (Button) findViewById(R.id.settings_button);
+
+        mCustomerInfo = (LinearLayout) findViewById(R.id.customerInfo);
+        mCustomerProfileImage = (ImageView) findViewById(R.id.customerProfileImage);
+        mCustomerName = (TextView) findViewById(R.id.customerName);
+        mCustomerPhone = (TextView)findViewById(R.id.customerPhone);
+        mCustomerDestination = (TextView)findViewById(R.id.customerDestination);
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             checkLocationPermission();
@@ -87,19 +105,27 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                 return;
             }
         });
+
+        mSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(DriverMapActivity.this, DriverSettingsActivity.class));
+            }
+        });
         getAssignedCustomer();
     }
 
     private void getAssignedCustomer() {
         String driverID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        final DatabaseReference mAssignedCustomerRef = FirebaseDatabase.getInstance().getReference().child("users").child("drivers").child(driverID).child("customerRideID");
+        final DatabaseReference mAssignedCustomerRef = FirebaseDatabase.getInstance().getReference().child("users").child("drivers").child(driverID).child("customerRequest").child("customerRideID");
         mAssignedCustomerRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
                         mCustomerID = dataSnapshot.getValue().toString();
                         getAssignedCustomerPickupLocation();
-
+                        getAssignedCustomerDestination();
+                        getAssignedCustomerInfo();
                 }else{
                     mCustomerID = "";
                     if (mPickupMarker!=null){
@@ -109,7 +135,31 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     if (mAssignedCustomerPickupRefListener!= null){
                         mAssignedCustomerPickupRef.removeEventListener(mAssignedCustomerPickupRefListener);
                     }
+                    mCustomerInfo.setVisibility(View.GONE);
+                    mCustomerPhone.setText("");
+                    mCustomerName.setText("");
+                    mCustomerProfileImage.setImageResource(R.drawable.user);
+                }
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void getAssignedCustomerDestination() {
+        String driverID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final DatabaseReference mAssignedCustomerRef = FirebaseDatabase.getInstance().getReference().child("users").child("drivers").child(driverID).child("customerRequest").child("destination");
+        mAssignedCustomerRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    String destination = dataSnapshot.getValue().toString();
+                    mCustomerDestination.setText("Destination: "+destination);
+                }else{
+                    mCustomerDestination.setText("Destination: --");
                 }
             }
 
@@ -243,6 +293,33 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         }
     }
 
+    private void getAssignedCustomerInfo () {
+        mCustomerInfo.setVisibility(View.VISIBLE);
+        DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users").child("customers").child(mCustomerID);
+        mDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
+                    Map<String, Object> map = (Map<String, Object>)dataSnapshot.getValue();
+                    if (map.get("name")!=null) {
+                        mCustomerName.setText(map.get("name").toString());
+                    }
+                    if (map.get("phone")!=null) {
+                        mCustomerPhone.setText(map.get("phone").toString());
+                    }
+                    if (map.get("profileImageUrl")!=null) {
+                        Glide.with(getApplication()).load(map.get("profileImageUrl").toString()).into(mCustomerProfileImage);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     @Override
     public void onConnectionSuspended(int i) {
 
@@ -276,8 +353,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     }
 
     private void disconnectDriver(){
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         mUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        mDatabaseReference = FirebaseDatabase.getInstance().getReference("DriversAvailable");
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference("driversAvailable");
         mGeoFire = new GeoFire(mDatabaseReference);
         mGeoFire.removeLocation(mUserID, new GeoFire.CompletionListener() {
             @Override

@@ -1,7 +1,6 @@
 package com.msmworks.shuber;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -34,9 +33,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CustomerSettingsActivity extends AppCompatActivity {
+public class DriverSettingsActivity extends AppCompatActivity {
 
-    private EditText mNameField, mPhoneField;
+    private EditText mNameField, mPhoneField, mCarField;
     private Button mConfirmButton, mBackButton;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabaseReference;
@@ -46,19 +45,25 @@ public class CustomerSettingsActivity extends AppCompatActivity {
     private String mProfileImageUrl;
     private ImageView mUserImage;
     private Uri mImageUri;
+    private String mCar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_customer_settings);
+        setContentView(R.layout.activity_driver_settings);
+
         mNameField = (EditText) findViewById(R.id.name_field);
         mPhoneField = (EditText) findViewById(R.id.number_field);
+        mCarField = (EditText) findViewById(R.id.car_field);
+
         mConfirmButton = (Button) findViewById(R.id.confirm_button);
         mBackButton = (Button) findViewById(R.id.back_button);
+
         mUserImage = (ImageView) findViewById(R.id.user_image);
+
         mAuth = FirebaseAuth.getInstance();
         userID = mAuth.getCurrentUser().getUid();
-        mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users").child("customers").child(userID);
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users").child("drivers").child(userID);
 
         getUserInfo();
 
@@ -102,6 +107,10 @@ public class CustomerSettingsActivity extends AppCompatActivity {
                         mPhone = map.get("phone").toString();
                         mPhoneField.setText(mPhone);
                     }
+                    if (map.get("car")!=null) {
+                        mCar = map.get("car").toString();
+                        mCarField.setText(mCar);
+                    }
                     if (map.get("profileImageUrl")!=null) {
                         mProfileImageUrl = map.get("profileImageUrl").toString();
                         Glide.with(getApplication()).load(mProfileImageUrl).into(mUserImage);
@@ -119,9 +128,11 @@ public class CustomerSettingsActivity extends AppCompatActivity {
     private void saveUserInformation() {
         mName = mNameField.getText().toString();
         mPhone = mPhoneField.getText().toString();
+        mCar = mCarField.getText().toString();
         Map userInfo = new HashMap();  //saving bundles of solution
         userInfo.put("name", mName);
         userInfo.put("phone", mPhone);
+        userInfo.put("car", mCar);
         mDatabaseReference.updateChildren(userInfo);
 
         if(mImageUri != null){
